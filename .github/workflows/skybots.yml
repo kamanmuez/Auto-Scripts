@@ -1,0 +1,90 @@
+name: SkyBots Auto Check
+
+on:
+  # 每天运行一次（北京时间 12:00）
+  schedule:
+    - cron: '0 4 * * *'  # UTC 4:00，对应北京时间 12:00
+  
+  # 支持手动触发
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  check-servers:
+    runs-on: ubuntu-22.04
+    
+    steps:
+      - name: 📥 检出私有仓库
+        uses: actions/checkout@v4
+        with:
+          repository: kamanmuez/Skybots-Auto-Renew  # 修改为你的私有仓库
+          token: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          path: scripts
+      
+      - name: 🌐 设置 WARP
+        uses: fscarmen/warp-on-actions@v1.4
+        with:
+          stack: dual
+          mode: wireguard
+      
+      - name: 🐍 设置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'scripts/requirements.txt'
+      
+      - name: 📦 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+      
+      - name: 🎭 安装 Playwright 浏览器
+        run: |
+          playwright install chromium
+          playwright install-deps
+      
+      - name: 🤖 运行 SkyBots 自动化脚本
+        env:
+          SKYBOTS_DISCORD_SESSION: ${{ secrets.SKYBOTS_DISCORD_SESSION }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        working-directory: scripts
+        run: python main.py
+      
+      - name: 📸 上传错误截图
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: error-screenshots
+          path: |
+            scripts/debug_*.png
+            scripts/skybots_*.png
+          if-no-files-found: ignore
+      
+      - name: 📄 上传 bot.json
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bot-data
+          path: scripts/bot.json
+          if-no-files-found: ignore
+      
+      - name: 📢 失败通知
+        if: failure()
+        run: |
+          echo "❌ SkyBots 自动化脚本运行失败"
+          echo "⏰ 时间: $(date)"
+          echo "📋 工作流: ${{ github.workflow }}"
+          echo "🔗 运行ID: ${{ github.run_id }}"
+      
+      - name: 🧹 清理旧的工作流运行记录
+        uses: MajorScruffy/delete-old-workflow-runs@v0.3.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          repository: ${{ github.repository }}
+          older-than-seconds: 3600  # 删除1小时前的记录
