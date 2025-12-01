@@ -9,8 +9,8 @@ on:
 
 jobs:
   renew:
-    runs-on: ubuntu-22.04
-    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     
     permissions:
       actions: write   # 允许删除工作流运行记录
@@ -26,7 +26,7 @@ jobs:
     - name: Set up WARP
       continue-on-error: true
       timeout-minutes: 3
-      uses: fscarmen/warp-on-actions@v1.3
+      uses: fscarmen/warp-on-actions@v1.4
       with:
         stack: dual
         mode: wireguard
