@@ -26,6 +26,8 @@ jobs:
         path: scripts
     
     - name: Set up WARP
+      continue-on-error: true
+      timeout-minutes: 5
       uses: fscarmen/warp-on-actions@v1.4
       with:
         stack: dual
@@ -80,4 +82,5 @@ jobs:
       with:
         repository: ${{ github.repository }}
         older-than-seconds: 86400  # 删除24小时前的记录
+
 
