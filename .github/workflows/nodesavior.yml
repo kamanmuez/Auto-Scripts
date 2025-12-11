@@ -61,18 +61,6 @@ jobs:
         path: scripts/*.png
         retention-days: 7
         if-no-files-found: ignore
-        
-    - name: Show completion
-      if: always()
-      env:
-        TZ: Asia/Shanghai
-      run: |
-        echo "============================================"
-        echo "🎉 签到任务完成"
-        echo "⏰ 执行时间: $(date +'%Y-%m-%d %H:%M:%S') (北京时间)"
-        echo "============================================"
-        echo "📸 生成的截图文件："
-        ls -la scripts/*.png 2>/dev/null || echo "无截图文件"
 
     - name: Clean up old workflow runs
       uses: MajorScruffy/delete-old-workflow-runs@v0.3.0
