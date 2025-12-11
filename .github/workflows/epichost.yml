@@ -55,24 +55,6 @@ jobs:
         retention-days: 30
         if-no-files-found: ignore
     
-    - name: Show completion
-      if: always()
-      env:
-        TZ: Asia/Shanghai
-      run: |
-        echo "============================================"
-        echo "🎉 续期任务完成"
-        echo "⏰ 执行时间: $(date +'%Y-%m-%d %H:%M:%S') (北京时间)"
-        echo "============================================"
-
-    - name: Send notification on failure
-      if: failure()
-      run: |
-        echo "续期任务失败，请检查日志"
-        echo "时间: $(date)"
-        echo "工作流: ${{ github.workflow }}"
-        echo "运行ID: ${{ github.run_id }}"
-    
     - name: Clean up old workflow runs
       uses: MajorScruffy/delete-old-workflow-runs@v0.3.0
       env:
