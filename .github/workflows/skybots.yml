@@ -1,4 +1,4 @@
-name: SkyBots Auto Check
+name: SkyBots Auto Renew
 
 on:
   # 每天运行一次（北京时间 12:00）
