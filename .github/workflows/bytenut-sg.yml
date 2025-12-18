@@ -10,7 +10,6 @@ on:
 
 permissions:
   contents: write
-  actions: write
 
 jobs:
   auto-login:
@@ -58,11 +57,3 @@ jobs:
         name: error-screenshot
         path: scripts/error_screenshot.png
         if-no-files-found: ignore
-
-    - name: Clean up old workflow runs
-      uses: MajorScruffy/delete-old-workflow-runs@v0.3.0
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      with:
-        repository: ${{ github.repository }}
-        older-than-seconds: 86400  # 删除1天前的记录
