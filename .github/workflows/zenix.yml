@@ -8,10 +8,6 @@ on:
   # 支持手动触发
   workflow_dispatch:
 
-permissions:
-  contents: write
-  actions: write
-
 jobs:
   renew:
     runs-on: ubuntu-22.04
@@ -44,11 +40,3 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         working-directory: scripts
         run: python main.py
-      
-      - name: Clean up old workflow runs
-        uses: MajorScruffy/delete-old-workflow-runs@v0.3.0
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          repository: ${{ github.repository }}
-          older-than-seconds: 86400  # 删除24小时前的记录
