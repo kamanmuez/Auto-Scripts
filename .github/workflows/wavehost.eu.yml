@@ -1,9 +1,9 @@
 name: WaveHost.eu Auto Renew
 
 on:
-  # 定时运行：每4小时执行一次
+  # 定时运行：每2小时执行一次
   schedule:
-    - cron: '0 */4 * * *'  # 每4小时执行一次 (0点、4点、8点、12点、16点、20点 UTC)
+    - cron: '0 */2 * * *'
   
   # 允许手动触发
   workflow_dispatch:
