@@ -48,12 +48,6 @@ jobs:
       - name: Install Playwright browser
         run: playwright install chromium --with-deps
       
-      - name: Check dependencies
-        run: |
-          curl --version
-          python --version
-          playwright --version
-      
       - name: Run login script
         working-directory: scripts
         env:
