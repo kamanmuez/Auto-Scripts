@@ -28,12 +28,6 @@ jobs:
           pip install -r requirements.txt
           playwright install chromium --with-deps
       
-      - name: Create cookie file
-        env:
-          HIKARI_COOKIE: ${{ secrets.HIKARI_COOKIE }}
-        working-directory: scripts
-        run: echo "$HIKARI_COOKIE" > HIKARI_COOKIE.json
-      
       - name: Run watch ads script
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
